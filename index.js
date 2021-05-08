@@ -15,6 +15,7 @@ client.on('ready', () => {
 client.on('message', msg => {
     if (msg.content === '!fish') {
         const replyMsg = msg.reply('Creating gifish...');
+        console.log('Starting GIF creation');
         fishcam.createGif(10, 200).then(gifStream => {
             replyMsg.then(reply => {
                 reply.edit('Fi(ni)shed, enjoy!');

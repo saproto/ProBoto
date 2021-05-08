@@ -10,11 +10,13 @@ export default class FishcamGif {
 
     async createGif(frameTarget = 10, frameTime = 200) {
         try {
+            console.log('Downloading frames');
             const frames = await downloadFrames(this.url, frameTarget);
         } catch (err) {
             console.log(err);
         }
 
+        console.log('Creating GIF');
         const encoder = new GIFEncoder(640, 480);
         const gifStream = encoder.createReadStream();
         encoder.start();
@@ -31,8 +33,10 @@ export default class FishcamGif {
                 encoder.addFrame(ctx);
             }
             image.src = frame;
+            console.log('Finished processing frame.');
         }
         encoder.finish();
+        console.log('GIF creation finished');
         return gifStream;
     }
 }
