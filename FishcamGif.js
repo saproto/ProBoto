@@ -1,6 +1,7 @@
 import GIFEncoder from "gifencoder";
 import https from "https";
 import canvas from 'canvas'
+
 const { createCanvas, Image } = canvas;
 
 export default class FishcamGif {
@@ -9,14 +10,16 @@ export default class FishcamGif {
     }
 
     async createGif(frameTarget = 10, frameTime = 200) {
+        let frames;
         try {
-            console.log('Downloading frames');
-            const frames = await downloadFrames(this.url, frameTarget);
+            frames = await downloadFrames(this.url, frameTarget);
         } catch (err) {
             console.log(err);
+            return false;
         }
 
-        console.log('Creating GIF');
+        if (!frames) return false;
+
         const encoder = new GIFEncoder(640, 480);
         const gifStream = encoder.createReadStream();
         encoder.start();
@@ -33,53 +36,50 @@ export default class FishcamGif {
                 encoder.addFrame(ctx);
             }
             image.src = frame;
-            console.log('Finished processing frame.');
         }
         encoder.finish();
-        console.log('GIF creation finished');
         return gifStream;
     }
 }
 
 async function downloadFrames(url, frameTarget) {
     try {
-        const downloadedFrames = await new Promise(resolve => {
+        return await new Promise(resolve => {
             let frames = [];
             const stream = https.get(url, res => {
-                console.log('Connected to fishcam');
                 const boundary = '--' + res.headers['content-type'].split('boundary=')[1];
                 let frameData;
                 res.on('data', data => {
-                    let boundaryIndex = data.indexOf(boundary);
-
                     if (frameData === undefined) {
                         frameData = data;
-                    } else if (boundaryIndex > 0) {
-                        let oldFrame = data.slice(0, boundaryIndex);
-                        let newFrame = data.slice(boundaryIndex, data.length);
-
-                        let frame = Buffer.concat([frameData, oldFrame]);
-                        let frameStart = frame.indexOf('\r\n\r\n') + 4;
-                        frame = frame.slice(frameStart, frame.length);
-                        frames.push(frame);
-                        console.log(`Downloaded frame #${frames.length}`);
-                        if (frames.length == frameTarget) {
-                            res.destroy();
-                            stream.end();
-                            resolve(frames);
-                        }
-                        frameData = newFrame;
                     } else {
                         frameData = Buffer.concat([frameData, data]);
+
+                        let boundaryIndex = frameData.indexOf(boundary);
+                        if (boundaryIndex == 0) {
+                            frameData = frameData.slice(boundary.length, frameData.length);
+                        }
+                        if (boundaryIndex > 1) {
+                            let frame = frameData.slice(0, boundaryIndex);
+                            let newFrame = frameData.slice(boundaryIndex, data.length);
+
+                            let frameStart = frame.indexOf('\r\n\r\n') + 4;
+                            frame = frame.slice(frameStart, frame.length);
+                            frames.push(frame);
+                            if (frames.length == frameTarget) {
+                                res.destroy();
+                                stream.end();
+                                resolve(frames);
+                            }
+                            frameData = newFrame;
+                        }
                     }
                 });
             });
         });
-
-        return downloadedFrames;
     } catch (err) {
         console.log(err);
-        return undefined;
+        return false;
     }
 }
 
