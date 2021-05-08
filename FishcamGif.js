@@ -46,6 +46,7 @@ async function downloadFrames(url, frameTarget) {
         const downloadedFrames = await new Promise(resolve => {
             let frames = [];
             const stream = https.get(url, res => {
+                console.log('Connected to fishcam');
                 const boundary = '--' + res.headers['content-type'].split('boundary=')[1];
                 let frameData;
                 res.on('data', data => {
