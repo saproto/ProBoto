@@ -14,12 +14,15 @@ client.on('ready', () => {
 
 client.on('message', msg => {
     if (msg.content === '!fish') {
-        msg.reply('Creating gifish...').then(reply => {
-            fishcam.createGif(10, 200).then(gifStream => {
+        const replyMsg = msg.reply('Creating gifish...');
+        fishcam.createGif(10, 200).then(gifStream => {
+            replyMsg.then(reply => {
                 reply.edit('Fi(ni)shed, enjoy!');
-                const attachment = new Discord.MessageAttachment(gifStream, 'fishcam.gif');
-                msg.channel.send('', {files: [attachment]});
             });
+            const attachment = new Discord.MessageAttachment(gifStream, 'fishcam.gif');
+            msg.channel.send('', {files: [attachment]});
+        }).catch(err => {
+            console.log(err);
         });
     } else if (msg.content === '!help') {
         msg.reply('I currently only have one purpose, send `!fish` to see the fishes.');
