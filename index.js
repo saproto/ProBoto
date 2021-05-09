@@ -13,7 +13,7 @@ client.on('ready', () => {
 });
 
 client.on('message', msg => {
-    if (msg.content === '!fish') {
+    if (msg.content === '?fish') {
         msg.reply('Creating gifish... 0%').then(reply => {
             fishcam.createGif(40, 100, reply).then(gifStream => {
                 reply.edit('Fi(ni)shed, enjoy!');
@@ -24,7 +24,7 @@ client.on('message', msg => {
                 reply.edit('Something went wrong, @BEHEEEEER!');
             });
         })
-    } else if (msg.content === '!help') {
+    } else if (msg.content === '?help') {
         msg.reply('I currently only have one purpose, send `!fish` to see the fishes.');
     }
 });
