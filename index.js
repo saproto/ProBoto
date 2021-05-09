@@ -14,8 +14,8 @@ client.on('ready', () => {
 
 client.on('message', msg => {
     if (msg.content === '!fish') {
-        msg.reply('Creating gifish...').then(reply => {
-            fishcam.createGif(10, 200).then(gifStream => {
+        msg.reply('Creating gifish... 0%').then(reply => {
+            fishcam.createGif(40, 100, reply).then(gifStream => {
                 reply.edit('Fi(ni)shed, enjoy!');
                 const attachment = new Discord.MessageAttachment(gifStream, 'fishcam.gif');
                 msg.channel.send('', {files: [attachment]});
