@@ -1,10 +1,10 @@
-const { MessageAttachment, SlashCommandBuilder } = require('discord.js');
-const GIFEncoder = require('gifencoder');
-const { createCanvas, Image } = require('canvas');
-const https = require('node:https');
-const fs = require('node:fs');
+/* Command to create a gif of the FishCam and send it as a reply to the user */
 
-class FishcamGif {
+const { SlashCommandBuilder } = require('discord.js');
+const GIFEncoder = require('gif-encoder-2')
+const { createCanvas } = require('canvas')
+
+class FishcamGifCreator {
     constructor(fishcamUrl) {
         this.url = fishcamUrl;
     }
@@ -102,20 +102,26 @@ async function downloadFrames(url, frameTarget, message) {
     }
 }
 
-const fishcam = new FishcamGif(process.env.FISHCAM_URL);
+const fishcamGifCreator = new FishcamGifCreator(process.env.FISHCAM_URL);
+
+const commandData = new SlashCommandBuilder()
+    .setName('fish')
+    .setDescription('Create a GIF of the Fishcam!');
+
+const commandExecute = async interaction => {
+    let reply = await interaction.reply('Creating FishCam gif...');
+    fishcamGifCreator.createGif(40, 100, reply).then(gifStream => {
+        reply.edit('Fi(ni)shed, enjoy!');
+        interaction.channel.send({
+            files: [{
+                attachment: gifStream,
+                name: 'fishcam.gif'
+            }]
+        });
+    });
+}
 
 module.exports = {
-	data: new SlashCommandBuilder()
-		.setName('fish')
-		.setDescription('Create a gif of the Fishcam!'),
-	async execute(interaction) {
-		let reply = await interaction.reply('Creating FishCam gif...');
-		fishcam.createGif(40, 100, reply).then(gifStream => {
-			reply.edit('Fi(ni)shed, enjoy!');
-			interaction.channel.send({files: [{
-				attachment: gifStream,
-				name: 'fishcam.gif'
-			}]});
-		});
-	},
+	data: commandData,
+	execute: commandExecute
 };
