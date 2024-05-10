@@ -1,0 +1,25 @@
+{
+  "name": "proboto",
+  "version": "1.0.0",
+  "description": "Proto's awesome Discord bot that does various things",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/saproto/ProBoto.git"
+  },
+  "author": "Max Liebe & Jonathan Mattarazzi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/saproto/ProBoto/issues"
+  },
+  "homepage": "https://github.com/saproto/ProBoto#readme",
+  "dependencies": {
+    "canvas": "^2.11.2",
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.3.1",
+    "gifencoder": "^2.0.1"
+  }
+}
