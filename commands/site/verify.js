@@ -10,7 +10,17 @@ const commandExecute = async interaction => {
     try {
         const userId = interaction?.member?.user?.id;
         const apiURL = `${process.env.PROTO_SITE_URL}/api/discord/verify/${userId}`;
-        const res = await fetch(apiURL);
+        const res = await fetch(apiURL, {
+            //TODO make this a middleware for more robust authentication to Proto website
+            headers: new Headers({
+                Authorization: `Bearer ${process.env.PROTO_SITE_API_KEY}`
+            })
+        });
+
+        if(res.status === 401) {
+            throw new Error('Got 401 from the Proto website. Make sure the API key is set correctly.');
+        }
+
         const validationResponse = await res.json();
         if(validationResponse.error) {
             interaction.reply({
@@ -31,6 +41,7 @@ We hope you'll have a nice stay at our Discord server. Enjoy!`,
         });
     }
     catch(e) {
+        console.error(e);
         interaction.replyWithError();
     }
 }
