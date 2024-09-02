@@ -1,11 +1,10 @@
-import GIFEncoder from "gifencoder";
-import https from "https";
-import canvas from 'canvas'
-import fs from 'fs';
+/* Command to create a gif of the FishCam and send it as a reply to the user */
 
-const { createCanvas, Image } = canvas;
+const { SlashCommandBuilder } = require('discord.js');
+const GIFEncoder = require('gif-encoder-2')
+const { createCanvas } = require('canvas')
 
-export default class FishcamGif {
+class FishcamGifCreator {
     constructor(fishcamUrl) {
         this.url = fishcamUrl;
     }
@@ -103,3 +102,26 @@ async function downloadFrames(url, frameTarget, message) {
     }
 }
 
+const fishcamGifCreator = new FishcamGifCreator(process.env.FISHCAM_URL);
+
+const commandData = new SlashCommandBuilder()
+    .setName('fish')
+    .setDescription('Create a GIF of the Fishcam!');
+
+const commandExecute = async interaction => {
+    let reply = await interaction.reply('Creating FishCam gif...');
+    fishcamGifCreator.createGif(40, 100, reply).then(gifStream => {
+        reply.edit('Fi(ni)shed, enjoy!');
+        interaction.channel.send({
+            files: [{
+                attachment: gifStream,
+                name: 'fishcam.gif'
+            }]
+        });
+    });
+}
+
+module.exports = {
+	data: commandData,
+	execute: commandExecute
+};

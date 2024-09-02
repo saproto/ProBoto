@@ -1,20 +1,26 @@
 {
   "name": "proboto",
   "version": "1.0.0",
-  "description": "Proto's Discord bot",
-  "main": "index.js",
-  "type": "module",
+  "description": "Proto's awesome Discord bot that does various things",
+  "main": "src/index.js",
   "scripts": {
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/index.js",
+    "deploy": "node src/deploy-commands.js"
   },
-  "keywords": [],
-  "author": "Jonathan Matarazzi",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/saproto/ProBoto.git"
+  },
+  "author": "Max Liebe & Jonathan Mattarazzi",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/saproto/ProBoto/issues"
+  },
+  "homepage": "https://github.com/saproto/ProBoto#readme",
   "dependencies": {
-    "canvas": "^2.7.0",
-    "discord.js": "^12.5.3",
-    "dotenv": "^9.0.0",
-    "gifencoder": "^2.0.1"
+    "canvas": "^2.11.2",
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.3.1",
+    "gif-encoder-2": "^1.0.5"
   }
 }
