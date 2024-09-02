@@ -1,0 +1,10 @@
+services:
+  app:
+    build:
+      context: .
+    environment:
+      - NODE_ENV=${DEV_ENVIRONMENT}
+    env_file: .env
+    ports:
+      - 8085:8085
+

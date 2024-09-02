@@ -10,7 +10,7 @@ const commands = require('./modules/load-commands');
 // Read the bot token
 const token = process.env.BOT_TOKEN;
 if(!token) {
-    console.log('Cannot proceed. Please make sure to set the CLIENT_SECRET token in the .env file!');
+    console.log('Cannot proceed. Please make sure to set the BOT_TOKEN in the .env file!');
     process.exit(1);
 }
 
